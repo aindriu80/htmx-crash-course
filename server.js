@@ -11,8 +11,23 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
-// Start the server
+// Handle GET request to fetch users
+app.get("/users", (req, res) => {
+  const users = [
+    { id: 1, name: "John Does" },
+    { id: 2, name: "Jake Wons" },
+    { id: 3, name: "Paul Somes" },
+  ];
 
+  res.send(`
+<h1 class="text-2xl font-bold my-4">Users</h1>
+<ul>
+${users.map((user) => `<li>${user.name}</li>`).join("")}
+</ul>
+`);
+});
+
+// Start the server
 app.listen(3000, () => {
   console.log("Server listening on port 3000");
 });
