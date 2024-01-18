@@ -34,6 +34,15 @@ app.get("/temperature", (req, res) => {
   res.sendFile(filePath);
 });
 
+// Add route for /request
+app.get("/polling", (req, res) => {
+  // Use path.join to safely join paths
+  const filePath = path.join(__dirname, "public", "polling.html");
+
+  // Send the file as a response
+  res.sendFile(filePath);
+});
+// Add route for /polling
 // Add route for /temperature
 app.post("/convert", (req, res) => {
   setTimeout(() => {
@@ -64,6 +73,23 @@ app.get("/users", async (req, res) => {
       </ul>
     `);
   }, 3000);
+});
+
+// Handle get request for polling example
+let counter = 0;
+app.get("/poll", (req, res) => {
+  counter++;
+
+  const data = { value: counter };
+
+  res.json(data);
+});
+
+let currentTemperature = 20;
+
+app.get("/get-temperature", (req, res) => {
+  currentTemperature += Math.random() * 2 - 1; //Random Temperature change
+  res.send(currentTemperature.toFixed(1) + "°C");
 });
 
 // Start the server
