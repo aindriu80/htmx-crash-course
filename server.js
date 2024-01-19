@@ -16,6 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
+//
+// Routes
+//
 // Add route for /request
 app.get("/request", (req, res) => {
   // Use path.join to safely join paths
@@ -25,7 +28,7 @@ app.get("/request", (req, res) => {
   res.sendFile(filePath);
 });
 
-// Add route for /request
+// Add route for /temperature
 app.get("/temperature", (req, res) => {
   // Use path.join to safely join paths
   const filePath = path.join(__dirname, "public", "temperature.html");
@@ -42,8 +45,17 @@ app.get("/polling", (req, res) => {
   // Send the file as a response
   res.sendFile(filePath);
 });
-// Add route for /polling
-// Add route for /temperature
+
+// Add route for /search
+app.get("/search", (req, res) => {
+  // Use path.join to safely join paths
+  const filePath = path.join(__dirname, "public", "search.html");
+
+  // Send the file as a response
+  res.sendFile(filePath);
+});
+
+// handle convert from farenheit to celsius
 app.post("/convert", (req, res) => {
   setTimeout(() => {
     const fahrenheit = parseFloat(req.body.fahrenheit);
