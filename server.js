@@ -91,6 +91,37 @@ app.post("/search", (req, res) => {
   }, 1000);
 });
 
+// Handle POST request for contacts search from json placeholder
+app.post("/search/api", async (req, res) => {
+  const searchTerm = req.body.search.toLowerCase();
+
+  if (!searchTerm) {
+    return res.send("<tr></tr>");
+  }
+
+  const response = await fetch(`https://jsonplaceholder.typicode.com/users`);
+  const contacts = await response.json();
+
+  const searchResults = contacts.filter((contact) => {
+    const name = contact.name.toLowerCase();
+    const email = contact.name.toLowerCase();
+
+    return name.includes(searchTerm) || email.includes(searchTerm);
+  });
+
+  setTimeout(() => {
+    const searchResultHtml = searchResults
+      .map(
+        (contact) => `<tr>
+      <td><div class="my-4 p-2">${contact.name}</div></td>
+      <td><div class="my-4 p-2">${contact.email}</div></td>
+      </tr>`,
+      )
+      .join("");
+    res.send(searchResultHtml);
+  }, 1000);
+});
+
 // handle convert from farenheit to celsius
 app.post("/convert", (req, res) => {
   setTimeout(() => {
