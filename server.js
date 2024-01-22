@@ -55,6 +55,15 @@ app.get("/search", (req, res) => {
   res.sendFile(filePath);
 });
 
+// Add route for /search
+app.get("/validation", (req, res) => {
+  // Use path.join to safely join paths
+  const filePath = path.join(__dirname, "public", "validation.html");
+
+  // Send the file as a response
+  res.sendFile(filePath);
+});
+
 const contacts = [
   { name: "John Doe", email: "john@example.com" },
   { name: "Jane Doe", email: "jane@example.com" },
@@ -169,6 +178,64 @@ let currentTemperature = 20;
 app.get("/get-temperature", (req, res) => {
   currentTemperature += Math.random() * 2 - 1; //Random Temperature change
   res.send(currentTemperature.toFixed(1) + "°C");
+});
+
+// Handle POST request for email validation
+app.post("/contact/email", (req, res) => {
+  const submittedEmail = req.body.email;
+  const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+
+  const isValid = {
+    message: "That email is valid",
+    class: "text-green-700",
+  };
+
+  const isInvalid = {
+    message: "Please enter a valid email",
+    class: "text-red-700",
+  };
+
+  if (!emailRegex.test(submittedEmail)) {
+    return res.send(
+      `
+      <div class="mb-4" hx-target="this" hx-swap="outerHTML">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email"
+          >Email Address</label
+        >
+        <input
+          name="email"
+          hx-post="/contact/email"
+          class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:border-blue-500"
+          type="email"
+          id="email"
+          value="${submittedEmail}"
+          required
+        />
+        <div class="${isInvalid.class}">${isInvalid.message}</div>
+      </div>
+      `,
+    );
+  } else {
+    return res.send(
+      `
+    <div class="mb-4" hx-target="this" hx-swap="outerHTML">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+        Email Address
+      </label>
+      <input
+        name="email"
+        hx-post="/contact/email"
+        class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:border-blue-500"
+        type="email"
+        id="email"
+        value="${submittedEmail}"
+        required
+      />
+      <div class="${isValid.class}">${isValid.message}</div>
+    </div>
+    `,
+    );
+  }
 });
 
 // Start the server
